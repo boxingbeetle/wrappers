@@ -16,11 +16,15 @@
 #
 # ------------------------------------------------------------------------------
 # 
+# Required environment variables:
+# SOFTFAB_STORAGEPOOL_ZON_PRODUCTS_URL
+#
 # Input product:
-# TOOLS_WINDOWS_ROOT
+# WRAPTREE_ROOT
 #
 # Output product:
 # WRAPTREE_EXE
+# WRAPTREE_EXE_URL
 #
 # ------------------------------------------------------------------------------
 #
@@ -51,7 +55,6 @@ print "SF_WRAPPER_ROOT: $::SF_WRAPPER_ROOT\n";
 print "SF_TARGET      : $::SF_TARGET\n";
 print "SF_REPORT_ROOT : $::SF_REPORT_ROOT\n";
 print "SF_RESULTS     : $::SF_RESULTS\n";
-print "SF_PRODUCT_URL : $::SF_PRODUCT_URL\n";
 print "SF_PRODUCT_ROOT: $::SF_PRODUCT_ROOT\n";
 
 ############################
@@ -90,10 +93,19 @@ my $cmd_rc = "";
 my $success = 0;
 my $exe = "wraptree.exe";
 my $exe_src = "Release\\$exe";
-my $log = "$::SF_REPORT_ROOT\\log.txt";
+my $log = "$::SF_REPORT_ROOT\\build.txt";
 my $root = "$::SF_PRODUCT_ROOT/$::WRAPTREE_ROOT";
 my $build_script = "build-wraptree.bat";
 my $MSVS_env = "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/Tools/VsDevCmd.bat";
+
+# Take SF_JOB_ID and make "day/time-token" format by changing first '-' to '/'
+my $chunck = "$::SF_JOB_ID";
+$chunck =~ s{-}{/};
+# Precede by environment variable (TODO: will be a TR parameter in future)
+my $url = $ENV{'SOFTFAB_STORAGEPOOL_ZON_PRODUCTS_URL'};
+# Get rid of the double quotes
+$url =~ s/"//g;
+my $product_url = "$url/$chunck";
 
 $MSVS_env =~ s{/}{\\}g;
 $root =~ s{/}{\\}g;
@@ -140,6 +152,7 @@ print "summary=$wrap_summary\n";
 open(RESULT, '>', $::SF_RESULTS) or die "Failed to open the results file '$::SF_RESULTS': $!\n";
 print RESULT "result=$wrap_result\n";
 print RESULT "summary=$wrap_summary\n";
+print RESULT "report=$log\n";
 
 # produce the output product on success only
 if ($success) {
@@ -158,7 +171,7 @@ if ($success) {
 	print "$wrap_product\n";
     print RESULT "$wrap_product\n";
 
-	my $wrap_product_url = "output.WRAPTREE_EXE_URL.locator=$::SF_PRODUCT_URL$exe";
+	my $wrap_product_url = "output.WRAPTREE_EXE_URL.locator=$product_url/$exe";
     print "$wrap_product_url\n";
     print RESULT "$wrap_product_url\n";
 }
