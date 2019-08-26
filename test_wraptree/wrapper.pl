@@ -137,7 +137,7 @@ if ($cmd_rc == 0 ) {
 	$wrap_summary = $last_log_line;
 } else {
 	$wrap_result  = "warning";
-	$wrap_summary = "$last_log_line (exit code: $cmd_rc)";
+	$wrap_summary = "exit code $cmd_rc: $last_log_line";
 }
 
 print "result=$wrap_result\n";
