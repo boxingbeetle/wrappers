@@ -52,15 +52,10 @@ print "Hosting Operating System is '$^O'\n";
 section_begin("SoftFab input parameters");
 print "SF_JOB_ID      : $::SF_JOB_ID\n";
 print "SF_TASK_ID     : $::SF_TASK_ID\n";
-print "SF_FRAMEWORK_ID: $::SF_FRAMEWORK_ID\n";
 print "SF_WRAPPER_ROOT: $::SF_WRAPPER_ROOT\n";
 print "SF_TARGET      : $::SF_TARGET\n";
-print "SF_TR_ID       : $::SF_TR_ID\n";
-print "SF_REPORT_URL  : $::SF_REPORT_URL\n";
 print "SF_REPORT_ROOT : $::SF_REPORT_ROOT\n";
 print "SF_RESULTS     : $::SF_RESULTS\n";
-print "SF_SUMMARY     : $::SF_SUMMARY\n";
-print "SF_PRODUCT_URL : $::SF_PRODUCT_URL\n";
 print "SF_PRODUCT_ROOT: $::SF_PRODUCT_ROOT\n";
 
 ############################
@@ -100,7 +95,7 @@ my $cmd_line = "";
 my $cmd_output = "";
 my $cmd_rc = "";
 my $success = 0;
-my $log = "$::SF_SUMMARY";
+my $log = "$::SF_REPORT_ROOT\\Test Log.txt";
 my $test_path_abs = "$::SF_PRODUCT_ROOT\\$::WRAPTREE_ROOT\\test";
 my $test_script = "wraptree-test.ps1";
 my $dir = "";
@@ -153,6 +148,7 @@ print "summary=$wrap_summary\n";
 open(RESULT, '>', $::SF_RESULTS) or die "Failed to open the results file '$::SF_RESULTS': $!\n";
 print RESULT "result=$wrap_result\n";
 print RESULT "summary=$wrap_summary\n";
+print RESULT "report=$log\n";
 close (RESULT);
 
 # Clean up temporary on success
