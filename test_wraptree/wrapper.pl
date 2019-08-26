@@ -12,14 +12,12 @@
 #  Creation date: 2019-02-26
 #
 # Description:
-# This wrapper will test 'wraptree' in the windows environment. See 
-# .\history\tools\windows\WinUtils\WrapTree\wraptree-test\README.txt for more
-# information.
+# This wrapper will test 'wraptree' in the windows environment.
 #
 # ------------------------------------------------------------------------------
 # 
 # Input products:
-# WRAPTREE_ROOT
+# WRAPTREE_TESTS_ROOT
 # WRAPTREE_EXE
 # 
 # Output products:
@@ -68,11 +66,11 @@ print "<none>\n";
 
 # Input products
 section_begin("Validating input products");
-if ((! defined($::WRAPTREE_ROOT)) || ($::WRAPTREE_ROOT eq "")) {
-    print "ERROR: WRAPTREE_ROOT is not specified!\n";
+if ((! defined($::WRAPTREE_TESTS_ROOT)) || ($::WRAPTREE_TESTS_ROOT eq "")) {
+    print "ERROR: WRAPTREE_TESTS_ROOT is not specified!\n";
     exit_wrapper("Input parameter check failed");
 }
-print "WRAPTREE_ROOT: $::WRAPTREE_ROOT\n";
+print "WRAPTREE_TESTS_ROOT: $::WRAPTREE_TESTS_ROOT\n";
 
 if ((! defined($::WRAPTREE_EXE)) || ($::WRAPTREE_EXE eq "")) {
     print "ERROR: WRAPTREE_EXE is not specified!\n";
@@ -96,7 +94,7 @@ my $cmd_output = "";
 my $cmd_rc = "";
 my $success = 0;
 my $log = "$::SF_REPORT_ROOT\\Test Log.txt";
-my $test_path_abs = "$::SF_PRODUCT_ROOT\\$::WRAPTREE_ROOT\\test";
+my $test_path_abs = "$::SF_PRODUCT_ROOT\\$::WRAPTREE_TESTS_ROOT";
 my $test_script = "wraptree-test.ps1";
 my $dir = "";
 my $last_log_line = "";
