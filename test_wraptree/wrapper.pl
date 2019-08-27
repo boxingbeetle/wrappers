@@ -136,8 +136,8 @@ if ($cmd_rc == 0 ) {
 	$wrap_result  = "ok";
 	$wrap_summary = $last_log_line;
 } else {
-	$wrap_result  = "warning";
-	$wrap_summary = "exit code $cmd_rc: $last_log_line";
+	$wrap_result  = "error";
+	$wrap_summary = "Exit code $cmd_rc: $last_log_line";
 }
 
 print "result=$wrap_result\n";
@@ -195,6 +195,7 @@ sub LastLine {
 		die "Can't read $file_path\n";
 
 	while( defined( $log_line = $bw->readline ) ) {
+		chomp $log_line;
 		return $log_line;
 	}
 
