@@ -59,8 +59,7 @@ print_with_timestamp("Killing (SIGKILL) wrapper process $pid_wrapper");
 my $cnt = kill 'KILL', $pid_wrapper;
 print_with_timestamp("Killed $cnt processes\n");
 
-my $SF_RESULTS = "$::SF_REPORT_ROOT\\results.properties";
-open(RESULT, '>', $SF_RESULTS) or die "Failed to open the results file '$SF_RESULTS': $!\n";
+open(RESULT, '>', $::SF_RESULTS) or die "Failed to open the results file '$::SF_RESULTS': $!\n";
 print RESULT "result=ok\n";
 print RESULT "summary=Success: after $ticks ticks the wrapper ($pid_wrapper) was aborted\n";
 print RESULT "report.0=$log\n";
