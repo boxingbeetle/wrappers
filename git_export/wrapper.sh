@@ -14,8 +14,6 @@
 # The wrapper produces (on success) the following output products:
 #   <mod>_REVISION:	commit ID of exported module
 #   <mod>_ROOT:		root specification of exported module
-#   <mod>_VERSION: 	CC only - specifies the Control Center version number,
-#			only generated if the Control Center code is exported.
 
 
 if [ -n "$GIT_REVISION" ]; then
