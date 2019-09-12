@@ -7,7 +7,20 @@ exit_with_error() {
     exit 0
 }
 
-cd "${SF_PRODUCT_ROOT}/${CC_ROOT}" || exit_with_error "Cannot access Control Center source dir"
+for INPUT in ${SF_INPUTS}
+do
+    case "${INPUT}" in
+    *_ROOT)
+        eval SOURCE_DIR='${'"${INPUT}"'}'
+        ;;
+    esac
+done
+if [ -z ${SOURCE_DIR} ]
+then
+    exit_with_error "No source input found (*_ROOT)"
+fi
+
+cd "${SF_PRODUCT_ROOT}/${SOURCE_DIR}" || exit_with_error "Cannot access source dir"
 
 poetry update || exit_with_error "Poetry could not install or update dependencies"
 
