@@ -29,7 +29,9 @@ fi
 echo "Exporting from Git: $GIT_REPO_URL"
 mkdir -p "$SF_PRODUCT_ROOT"
 cd "$SF_PRODUCT_ROOT"
-git clone --depth 1 $REVISION_OPT -- "$GIT_REPO_URL" "$GIT_PRODUCT"
+CMD="git clone --depth 1 $REVISION_OPT -- \"$GIT_REPO_URL\" \"$GIT_PRODUCT\""
+echo $CMD
+eval $CMD
 GIT_RESULT=$?
 
 if [ $GIT_RESULT != 0 ]; then
