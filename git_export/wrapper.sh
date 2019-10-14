@@ -94,7 +94,7 @@ echo "Exporting from Git: $GIT_REPO_URL"
 echo "Prune: $PRUNE"
 mkdir -p "$SF_PRODUCT_ROOT"
 cd "$SF_PRODUCT_ROOT"
-CMD="git clone --depth 1 $REVISION_OPT -- \"$GIT_REPO_URL\" \"$GIT_PRODUCT\""
+CMD="git clone --depth 1 --recurse-submodules --shallow-submodules $REVISION_OPT -- \"$GIT_REPO_URL\" \"$GIT_PRODUCT\""
 echo $CMD
 eval $CMD
 GIT_RESULT=$?
