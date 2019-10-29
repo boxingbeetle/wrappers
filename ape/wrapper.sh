@@ -24,14 +24,16 @@ poetry update || exit_with_error "Poetry could not install or update dependencie
 # Start CC in background.
 DBDIR="$SF_REPORT_ROOT/db"
 echo "Starting Control Center..."
-poetry run sh -c 'inv run --port '"$CC_PORT"' --dbdir '"$DBDIR"' &> '"$SF_REPORT_ROOT/cc-out.txt"' & echo $! > '"$SF_REPORT_ROOT/cc.pid" || exit_with_error "Control Center startup failed"
+poetry run sh -c 'inv run --port '"$CC_PORT"' --dbdir '"$DBDIR"' --coverage &> '"$SF_REPORT_ROOT/cc-out.txt"' &' || exit_with_error "Control Center startup failed"
 # TODO: Ugly hack to give CC enough time to try and bind a socket.
 #       It would be better to let APE sleep + retry a few times
 #       on connection refused.
 #       https://github.com/boxingbeetle/apetest/issues/21
-CC_PID=`cat "$SF_REPORT_ROOT/cc.pid"`
+#       Note that we should still give Invoke the time to write the PID file,
+#       but we could simply fetch the PID just before shutdown.
 sleep 3
 add_cc_logs
+CC_PID=`cat "$DBDIR/cc.pid"`
 test -d "/proc/$CC_PID" || exit_with_error "Control Center not running"
 
 # Run APE.
@@ -46,12 +48,21 @@ echo "report.20=ape-out.txt" >> "$SF_RESULTS"
 
 # Shut down Control Center.
 echo "Shutting down Control Center..."
-kill "$CC_PID"
+kill -s SIGINT "$CC_PID"
 for count in $(seq 1 10)
 do
     sleep 1
-    test -d "/proc/$CC_PID" && break
+    test -d "/proc/$CC_PID" || break
 done
-test -d "/proc/$CC_PID" && kill -9 "$CC_PID"
+if test -d "/proc/$CC_PID"
+then
+    echo "Graceful shutdown failed."
+    kill -s SIGKILL "$CC_PID"
+fi
+
+# Generate coverage report.
+poetry run sh -c 'cd '"$DBDIR"' && coverage html --rcfile='"$PWD"'/.coveragerc -d '"$SF_REPORT_ROOT/coverage"
+sed -i "s%$PWD/src/softfab/%softfab/%g" "$SF_REPORT_ROOT/coverage/"*.html
+echo "report.2=$SF_REPORT_ROOT/coverage/" >> "$SF_RESULTS"
 
 exit 0
