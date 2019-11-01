@@ -21,6 +21,9 @@ sed -i "/logChanges = /s%False%True%" src/softfab/config.py
 # Install/update CC dependencies.
 poetry update || exit_with_error "Poetry could not install or update dependencies"
 
+# Install/update CC itself.
+poetry install || exit_with_error "Poetry could not install or update Control Center"
+
 # Start CC in background.
 DBDIR="$SF_REPORT_ROOT/db"
 echo "Starting Control Center..."
