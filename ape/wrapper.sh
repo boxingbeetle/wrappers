@@ -60,9 +60,7 @@ then
     kill -s SIGKILL "$CC_PID"
 fi
 
-# Generate coverage report.
-poetry run sh -c 'cd '"$DBDIR"' && coverage html --rcfile='"$PWD"'/.coveragerc -d '"$SF_REPORT_ROOT/coverage"
-sed -i "s%$PWD/src/softfab/%softfab/%g" "$SF_REPORT_ROOT/coverage/"*.html
-echo "report.2=$SF_REPORT_ROOT/coverage/" >> "$SF_RESULTS"
+# Output coverage data.
+echo "output.COVERAGE.locator=$DBDIR/.coverage" >> "$SF_RESULTS"
 
 exit 0
