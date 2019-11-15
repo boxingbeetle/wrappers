@@ -24,10 +24,13 @@ poetry update || exit_with_error "Poetry could not install or update dependencie
 # Install/update CC itself.
 poetry install || exit_with_error "Poetry could not install or update Control Center"
 
-# Start CC in background.
+# Create DB.
 DBDIR="$SF_REPORT_ROOT/db"
+poetry run sh -c 'softfab init -d '"$DBDIR"' --port '"$CC_PORT" || exit_with_error "Control Center init failed"
+
+# Start CC in background.
 echo "Starting Control Center..."
-poetry run sh -c 'inv run --port '"$CC_PORT"' --dbdir '"$DBDIR"' --coverage &> '"$SF_REPORT_ROOT/cc-out.txt"' &' || exit_with_error "Control Center startup failed"
+poetry run sh -c 'inv run --dbdir '"$DBDIR"' --coverage &> '"$SF_REPORT_ROOT/cc-out.txt"' &' || exit_with_error "Control Center startup failed"
 # TODO: Ugly hack to give CC enough time to try and bind a socket.
 #       It would be better to let APE sleep + retry a few times
 #       on connection refused.
