@@ -54,7 +54,7 @@ echo "report.20=ape-out.txt" >> "$SF_RESULTS"
 
 # Shut down Control Center.
 echo "Shutting down Control Center..."
-kill -s SIGINT "$CC_PID"
+kill "$CC_PID"
 for count in $(seq 1 10)
 do
     sleep 1
