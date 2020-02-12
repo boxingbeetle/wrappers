@@ -16,8 +16,8 @@
 #
 # ------------------------------------------------------------------------------
 # 
-# Required environment variables:
-# SOFTFAB_STORAGEPOOL_ZON_PRODUCTS_URL
+# Task Runner parameter:
+# PRODUCT_STORAGEPOOL_URL
 #
 # Input product:
 # WRAPTREE_ROOT
@@ -101,8 +101,8 @@ my $MSVS_env = "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Co
 # Take SF_JOB_ID and make "day/time-token" format by changing first '-' to '/'
 my $chunck = "$::SF_JOB_ID";
 $chunck =~ s{-}{/};
-# Precede by environment variable (TODO: will be a TR parameter in future)
-my $url = $ENV{'SOFTFAB_STORAGEPOOL_ZON_PRODUCTS_URL'};
+# Precede by Task Runner parameter
+my $url = "$::PRODUCT_STORAGEPOOL_URL";
 # Get rid of the double quotes
 $url =~ s/"//g;
 my $product_url = "$url/$chunck";
