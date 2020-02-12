@@ -16,8 +16,8 @@
 #
 # ------------------------------------------------------------------------------
 # 
-# Task Runner parameter:
-# PRODUCT_STORAGEPOOL_URL
+# Required environment variable:
+# PRODUCT_STORAGEPOOL_URL: specifies the URL of the locally served PRODUCTS root
 #
 # Input product:
 # WRAPTREE_ROOT
@@ -102,7 +102,7 @@ my $MSVS_env = "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Co
 my $chunck = "$::SF_JOB_ID";
 $chunck =~ s{-}{/};
 # Precede by Task Runner parameter
-my $url = "$::PRODUCT_STORAGEPOOL_URL";
+my $url = $ENV{'PRODUCT_STORAGEPOOL_URL'};
 # Get rid of the double quotes
 $url =~ s/"//g;
 my $product_url = "$url/$chunck";
