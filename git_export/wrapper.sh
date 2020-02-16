@@ -23,14 +23,14 @@ function exit_with_error() {
     echo "$wrap_summary"
 
     # write to SF_RESULTS file (results.properties)
-    echo "result=error" > $SF_RESULTS
-    echo "summary=$wrap_summary" >> $SF_RESULTS
+    echo "result=error" > "$SF_RESULTS"
+    echo "summary=$wrap_summary" >> "$SF_RESULTS"
 
     exit 0
 }
 
 function prune_siblings() {
-    child=$1           # Child which siblings should be pruned
+    child="$1"		# Child which siblings should be pruned
 
     if [ ! -d "$TOP_DIR" ]; then
         exit_with_error "$TOP_DIR is not a directory"
@@ -57,7 +57,8 @@ function prune_siblings() {
         done
 
         # Now prune the siblings of the parent
-        prune_siblings `realpath "$parent"`
+        next_parent=`realpath "$parent"`
+        prune_siblings "$next_parent"
     fi
 }
 
@@ -78,7 +79,7 @@ fi
 
 # Set PRUNE to 'no' in case of multiple ROOT products
 ROOT_CNT=0
-for OUTPUT in $SF_OUTPUTS; do
+for OUTPUT in "$SF_OUTPUTS"; do
     if [ ${OUTPUT: -5} == _ROOT ]; then
         ROOT_CNT=$((ROOT_CNT+1))
     fi
@@ -103,10 +104,10 @@ EXPORTED_REVISION=`cd "$GIT_PRODUCT" && git rev-parse HEAD`
 #
 # On success and if needed, prune sibling directories; leave files untouched
 #
-if [ $GIT_RESULT = 0 ] && [ $PRUNE == "yes" ]; then
+if [ $GIT_RESULT == 0 ] && [ $PRUNE == "yes" ]; then
     echo "Pruning..."
 
-    for OUTPUT in $SF_OUTPUTS; do
+    for OUTPUT in "$SF_OUTPUTS"; do
         if [ ${OUTPUT: -5} == _ROOT ]; then
             eval TARGET='${'"GIT_PATH_${OUTPUT:0:-5}"'}'
         fi
@@ -135,23 +136,23 @@ else
 fi
 
 # write to SF_RESULTS file (results.properties)
-echo "result=$RESULT" > $SF_RESULTS
-echo "summary=$SUMMARY" >> $SF_RESULTS
+echo "result=$RESULT" > "$SF_RESULTS"
+echo "summary=$SUMMARY" >> "$SF_RESULTS"
 
 #
 # Generate for all required output products the locator in the result file
 #
 if [ $RESULT == ok ]; then
-    for OUTPUT in $SF_OUTPUTS; do
+    for OUTPUT in "$SF_OUTPUTS"; do
         if [ ${OUTPUT: -5} == _ROOT ]; then
             eval GIT_PATH='${'"GIT_PATH_${OUTPUT:0:-5}"'}'
-            echo "output.$OUTPUT.locator=$GIT_PRODUCT/$GIT_PATH" >> $SF_RESULTS
+            echo "output.$OUTPUT.locator=$GIT_PRODUCT/$GIT_PATH" >> "$SF_RESULTS"
         elif [ ${OUTPUT: -9} == _REVISION ]; then
-            echo "output.$OUTPUT.locator=$EXPORTED_REVISION" >> $SF_RESULTS
+            echo "output.$OUTPUT.locator=$EXPORTED_REVISION" >> "$SF_RESULTS"
         fi
     done
     # mid level data
-    echo "data.git_revision=$EXPORTED_REVISION" >> $SF_RESULTS
+    echo "data.git_revision=$EXPORTED_REVISION" >> "$SF_RESULTS"
 else
     # write error message to stdout / wrapper_log.txt
     echo $SUMMARY
