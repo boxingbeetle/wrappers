@@ -26,7 +26,7 @@ poetry install || exit_with_error "Poetry could not install or update Control Ce
 
 # Create DB.
 DBDIR="$SF_REPORT_ROOT/db"
-poetry run sh -c 'softfab init -d '"$DBDIR"' --port '"$CC_PORT" || exit_with_error "Control Center init failed"
+poetry run sh -c 'softfab -d '"$DBDIR"' init --port '"$CC_PORT" || exit_with_error "Control Center init failed"
 
 # Start CC in background.
 echo "Starting Control Center..."
