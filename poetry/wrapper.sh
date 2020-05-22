@@ -22,6 +22,6 @@ fi
 
 cd "${SF_PRODUCT_ROOT}/${SOURCE_DIR}" || exit_with_error "Cannot access source dir"
 
-poetry update || exit_with_error "Poetry could not install or update dependencies"
+poetry install || exit_with_error "Poetry could not install package and dependencies"
 
 poetry run inv ${INVOKE_ARGS} --results="${SF_RESULTS}" || exit_with_error "Invoke task failed"
