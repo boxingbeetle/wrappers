@@ -14,10 +14,6 @@ add_cc_logs() {
 
 cd "$SF_PRODUCT_ROOT/$CC_ROOT" || exit_with_error "Cannot access source dir"
 
-# Patch configuration.
-echo "Patching configuration..."
-sed -i "/logChanges = /s%False%True%" src/softfab/config.py
-
 # Install/update CC dependencies.
 poetry update || exit_with_error "Poetry could not install or update dependencies"
 
@@ -27,6 +23,10 @@ poetry install || exit_with_error "Poetry could not install or update Control Ce
 # Create DB.
 DBDIR="$SF_REPORT_ROOT/db"
 poetry run sh -c 'softfab -d '"$DBDIR"' init --port '"$CC_PORT" || exit_with_error "Control Center init failed"
+
+# Patch configuration.
+echo "Updating configuration..."
+echo "logchanges = on" >> "$DBDIR"/softfab.ini || exit_with_error "Control Center config update failed"
 
 # Start CC in background.
 echo "Starting Control Center..."
