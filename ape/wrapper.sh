@@ -30,7 +30,7 @@ echo "logchanges = on" >> "$DBDIR"/softfab.ini || exit_with_error "Control Cente
 
 # Start CC in background.
 echo "Starting Control Center..."
-poetry run sh -c 'inv run --dbdir '"$DBDIR"' --coverage &> '"$SF_REPORT_ROOT/cc-out.txt"' &' || exit_with_error "Control Center startup failed"
+poetry run sh -c 'inv run --dbdir '"$DBDIR"' --coverage APE &> '"$SF_REPORT_ROOT/cc-out.txt"' &' || exit_with_error "Control Center startup failed"
 # TODO: Ugly hack to give CC enough time to try and bind a socket.
 #       It would be better to let APE sleep + retry a few times
 #       on connection refused.
