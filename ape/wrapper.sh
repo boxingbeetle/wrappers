@@ -14,6 +14,11 @@ add_cc_logs() {
 
 cd "$SF_PRODUCT_ROOT/$CC_ROOT" || exit_with_error "Cannot access source dir"
 
+if [ -n "${PYTHON}" ]
+then
+    poetry env use ${PYTHON} || exit_with_error "Poetry could not select requested Python version"
+fi
+
 # Install/update CC dependencies.
 poetry update || exit_with_error "Poetry could not install or update dependencies"
 
