@@ -22,6 +22,11 @@ fi
 
 cd "${SF_PRODUCT_ROOT}/${SOURCE_DIR}" || exit_with_error "Cannot access source dir"
 
+if [ -n ${PYTHON} ]
+then
+    poetry env use ${PYTHON} || exit_with_error "Poetry could not select requested Python version"
+fi
+
 poetry install || exit_with_error "Poetry could not install package and dependencies"
 
 poetry run inv ${INVOKE_ARGS} --results="${SF_RESULTS}" || exit_with_error "Invoke task failed"
