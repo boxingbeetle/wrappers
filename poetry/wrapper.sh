@@ -22,7 +22,7 @@ fi
 
 cd "${SF_PRODUCT_ROOT}/${SOURCE_DIR}" || exit_with_error "Cannot access source dir"
 
-if [ -n ${PYTHON} ]
+if [ -n "${PYTHON}" ]
 then
     poetry env use ${PYTHON} || exit_with_error "Poetry could not select requested Python version"
 fi
